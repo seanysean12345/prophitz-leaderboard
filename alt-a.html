@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROPHITZ × RAZED | Neon Arena Leaderboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0015;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Animated Grid Background */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background: 
+                linear-gradient(90deg, rgba(139, 92, 246, 0.03) 1px, transparent 1px),
+                linear-gradient(rgba(139, 92, 246, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Scanline Overlay */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15) 0px,
+                transparent 1px,
+                transparent 2px,
+                rgba(0, 0, 0, 0.15) 3px
+            );
+            opacity: 0.4;
+        }
+
+        /* Glitch Text Effect */
+        .glitch {
+            position: relative;
+            font-family: 'Oxanium', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            animation: glitchPulse 3s infinite;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #8B5CF6;
+            clip: rect(24px, 550px, 90px, 0);
+            animation: glitchAnim 2s infinite linear alternate-reverse;
+        }
+
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 #EC4899;
+            clip: rect(85px, 550px, 140px, 0);
+            animation: glitchAnim 3s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitchAnim {
+            0% { clip: rect(12px, 9999px, 84px, 0); }
+            10% { clip: rect(71px, 9999px, 23px, 0); }
+            20% { clip: rect(45px, 9999px, 102px, 0); }
+            30% { clip: rect(89px, 9999px, 5px, 0); }
+            40% { clip: rect(33px, 9999px, 67px, 0); }
+            50% { clip: rect(95px, 9999px, 41px, 0); }
+            60% { clip: rect(18px, 9999px, 88px, 0); }
+            70% { clip: rect(62px, 9999px, 14px, 0); }
+            80% { clip: rect(7px, 9999px, 96px, 0); }
+            90% { clip: rect(53px, 9999px, 29px, 0); }
+            100% { clip: rect(76px, 9999px, 58px, 0); }
+        }
+
+        @keyframes glitchPulse {
+            0%, 90%, 100% { opacity: 1; }
+            92%, 98% { opacity: 0.8; }
+        }
+
+        /* Neon Glow Effects */
+        .neon-border {
+            border: 2px solid #8B5CF6;
+            box-shadow: 
+                0 0 10px rgba(139, 92, 246, 0.5),
+                0 0 20px rgba(139, 92, 246, 0.3),
+                inset 0 0 10px rgba(139, 92, 246, 0.1);
+        }
+
+        .neon-glow {
+            box-shadow: 
+                0 0 20px rgba(139, 92, 246, 0.4),
+                0 0 40px rgba(236, 72, 153, 0.2);
+        }
+
+        .neon-text {
+            text-shadow: 
+                0 0 10px rgba(139, 92, 246, 0.8),
+                0 0 20px rgba(139, 92, 246, 0.5),
+                0 0 30px rgba(236, 72, 153, 0.3);
+        }
+
+        /* Clipped Corners */
+        .clip-corner {
+            clip-path: polygon(
+                15px 0, 100% 0, 100% calc(100% - 15px), 
+                calc(100% - 15px) 100%, 0 100%, 0 15px
+            );
+        }
+
+        .clip-corner-sm {
+            clip-path: polygon(
+                8px 0, 100% 0, 100% calc(100% - 8px), 
+                calc(100% - 8px) 100%, 0 100%, 0 8px
+            );
+        }
+
+        /* Pulsing Animation */
+        @keyframes pulse-glow {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 20px rgba(139, 92, 246, 0.6),
+                    0 0 40px rgba(236, 72, 153, 0.4);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 30px rgba(139, 92, 246, 0.9),
+                    0 0 60px rgba(236, 72, 153, 0.6);
+            }
+        }
+
+        .pulse-neon {
+            animation: pulse-glow 2s infinite;
+        }
+
+        /* Rank Badges */
+        .rank-badge {
+            font-family: 'Oxanium', sans-serif;
+            font-weight: 800;
+            font-size: 3rem;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.8));
+        }
+
+        /* Diagonal Accent Lines */
+        .diagonal-line {
+            position: absolute;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(180deg, transparent, #8B5CF6, transparent);
+            opacity: 0.3;
+        }
+
+        /* Hover Effects */
+        .hover-lift {
+            transition: all 0.3s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 0 30px rgba(139, 92, 246, 0.6),
+                0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Ticker Animation */
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-content {
+            animation: ticker 30s linear infinite;
+        }
+
+        /* Table Styles */
+        .table-header {
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+            border-bottom: 2px solid #8B5CF6;
+        }
+
+        .table-row {
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .table-row:hover {
+            background: rgba(139, 92, 246, 0.1);
+            border-left: 3px solid #EC4899;
+        }
+
+        /* Button Styles */
+        .btn-neon {
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            font-family: 'Oxanium', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 0 20px rgba(139, 92, 246, 0.4),
+                0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-neon:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 0 30px rgba(139, 92, 246, 0.8),
+                0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Number Styles */
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Responsive Typography */
+        @media (max-width: 768px) {
+            .glitch {
+                font-size: 2rem;
+            }
+            .rank-badge {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body class="relative">
+    <!-- Animated Background -->
+    <div class="grid-bg"></div>
+    <div class="scanlines"></div>
+
+    <!-- Main Content -->
+    <div class="relative z-10">
+        <!-- Navigation -->
+        <nav class="fixed top-0 w-full backdrop-blur-md bg-black/30 border-b border-purple-500/30 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center clip-corner-sm">
+                            <span class="text-2xl">⚡</span>
+                        </div>
+                        <span class="text-xl font-bold" style="font-family: 'Oxanium', sans-serif;">
+                            <span class="neon-text">PROPHITZ</span>
+                            <span class="text-purple-400 mx-2">×</span>
+                            <span class="text-pink-400">RAZED</span>
+                        </span>
+                    </div>
+                    <div class="hidden md:flex space-x-6" style="font-family: 'Oxanium', sans-serif; font-weight: 600;">
+                        <a href="#leaderboard" class="text-gray-300 hover:text-purple-400 transition">LEADERBOARD</a>
+                        <a href="#prizes" class="text-gray-300 hover:text-purple-400 transition">PRIZES</a>
+                        <a href="#join" class="text-gray-300 hover:text-purple-400 transition">JOIN</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Ticker -->
+        <div class="mt-16 bg-gradient-to-r from-purple-900/30 to-pink-900/30 border-y border-purple-500/30 overflow-hidden">
+            <div class="flex whitespace-nowrap ticker-content py-2">
+                <span class="inline-flex items-center px-8 text-sm font-semibold text-purple-300">
+                    🏆 $5,000 PRIZE POOL
+                </span>
+                <span class="inline-flex items-center px-8 text-sm font-semibold text-pink-300">
+                    ⚡ 342 ACTIVE PLAYERS
+                </span>
+                <span class="inline-flex items-center px-8 text-sm font-semibold text-purple-300">
+                    💰 $247,892 WAGERED
+                </span>
+                <span class="inline-flex items-center px-8 text-sm font-semibold text-pink-300">
+                    🎮 LIVE COMPETITION
+                </span>
+                <span class="inline-flex items-center px-8 text-sm font-semibold text-purple-300">
+                    🏆 $5,000 PRIZE POOL
+                </span>
+                <span class="inline-flex items-center px-8 text-sm font-semibold text-pink-300">
+                    ⚡ 342 ACTIVE PLAYERS
+                </span>
+                <span class="inline-flex items-center px-8 text-sm font-semibold text-purple-300">
+                    💰 $247,892 WAGERED
+                </span>
+                <span class="inline-flex items-center px-8 text-sm font-semibold text-pink-300">
+                    🎮 LIVE COMPETITION
+                </span>
+            </div>
+        </div>
+
+        <!-- Hero Section -->
+        <section class="py-16 px-4">
+            <div class="max-w-7xl mx-auto text-center">
+                <h1 class="glitch text-6xl md:text-8xl mb-4" data-text="AFFILIATE LEADERBOARD">
+                    AFFILIATE LEADERBOARD
+                </h1>
+                <p class="text-xl text-gray-400 mb-12" style="font-family: 'Oxanium', sans-serif;">
+                    Top performers competing for massive rewards
+                </p>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+                    <!-- Active Players -->
+                    <div class="neon-border clip-corner bg-gradient-to-br from-purple-900/20 to-pink-900/20 p-8 backdrop-blur-sm hover-lift">
+                        <div class="text-5xl font-bold neon-text mono counter" data-target="342">0</div>
+                        <div class="text-sm text-gray-400 mt-2 uppercase tracking-wider" style="font-family: 'Oxanium', sans-serif;">Active Players</div>
+                    </div>
+
+                    <!-- Total Wagered -->
+                    <div class="neon-border clip-corner bg-gradient-to-br from-purple-900/20 to-pink-900/20 p-8 backdrop-blur-sm hover-lift">
+                        <div class="text-5xl font-bold neon-text mono counter" data-target="247892" data-prefix="$">$0</div>
+                        <div class="text-sm text-gray-400 mt-2 uppercase tracking-wider" style="font-family: 'Oxanium', sans-serif;">Total Wagered</div>
+                    </div>
+
+                    <!-- Prize Pool -->
+                    <div class="neon-border clip-corner bg-gradient-to-br from-purple-900/20 to-pink-900/20 p-8 backdrop-blur-sm hover-lift">
+                        <div class="text-5xl font-bold neon-text mono counter" data-target="5000" data-prefix="$">$0</div>
+                        <div class="text-sm text-gray-400 mt-2 uppercase tracking-wider" style="font-family: 'Oxanium', sans-serif;">Prize Pool</div>
+                    </div>
+                </div>
+
+                <!-- Countdown Timer -->
+                <div class="inline-block neon-border clip-corner bg-gradient-to-r from-purple-900/30 to-pink-900/30 px-8 py-4 backdrop-blur-sm">
+                    <div class="text-sm text-gray-400 mb-2 uppercase tracking-wider" style="font-family: 'Oxanium', sans-serif;">Competition Ends In</div>
+                    <div id="countdown" class="text-3xl font-bold neon-text mono">00:00:00:00</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Top 3 Podium -->
+        <section id="leaderboard" class="py-16 px-4 reveal">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-4xl font-bold text-center mb-12 neon-text" style="font-family: 'Oxanium', sans-serif;">
+                    🏆 TOP CONTENDERS 🏆
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                    <!-- 2nd Place -->
+                    <div class="md:order-1 order-2">
+                        <div class="neon-border clip-corner bg-gradient-to-br from-purple-900/30 to-pink-900/30 p-8 backdrop-blur-sm hover-lift relative overflow-hidden">
+                            <div class="diagonal-line" style="left: 10%; transform: skewX(-20deg);"></div>
+                            <div class="diagonal-line" style="right: 10%; transform: skewX(-20deg);"></div>
+                            <div class="text-center relative z-10">
+                                <div class="rank-badge mb-4">#2</div>
+                                <div class="text-2xl font-bold text-purple-300 mb-2" style="font-family: 'Oxanium', sans-serif;">Vex</div>
+                                <div class="space-y-2 text-gray-400">
+                                    <div class="mono text-xl font-semibold text-purple-400">$38,420</div>
+                                    <div class="text-sm">Wagered</div>
+                                    <div class="mono text-lg text-green-400">+$5,180</div>
+                                    <div class="text-sm">Profit</div>
+                                </div>
+                                <div class="mt-4 pt-4 border-t border-purple-500/30">
+                                    <div class="text-2xl font-bold text-pink-400 mono">$750</div>
+                                    <div class="text-xs text-gray-500 uppercase">Prize</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 1st Place -->
+                    <div class="md:order-2 order-1">
+                        <div class="neon-border clip-corner bg-gradient-to-br from-purple-900/40 to-pink-900/40 p-8 backdrop-blur-sm pulse-neon relative overflow-hidden transform md:scale-110">
+                            <div class="diagonal-line" style="left: 10%; transform: skewX(-20deg);"></div>
+                            <div class="diagonal-line" style="right: 10%; transform: skewX(-20deg);"></div>
+                            <div class="absolute top-0 right-0 bg-yellow-500 text-black text-xs font-bold px-3 py-1 clip-corner-sm">
+                                LEADER
+                            </div>
+                            <div class="text-center relative z-10">
+                                <div class="rank-badge mb-4">👑</div>
+                                <div class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-400 mb-2" style="font-family: 'Oxanium', sans-serif;">DrkKnight</div>
+                                <div class="space-y-2 text-gray-300">
+                                    <div class="mono text-2xl font-bold text-purple-300">$52,100</div>
+                                    <div class="text-sm">Wagered</div>
+                                    <div class="mono text-xl text-green-400">+$8,320</div>
+                                    <div class="text-sm">Profit</div>
+                                </div>
+                                <div class="mt-4 pt-4 border-t border-purple-500/50">
+                                    <div class="text-3xl font-bold text-yellow-400 mono">$1,500</div>
+                                    <div class="text-xs text-gray-400 uppercase">Prize</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3rd Place -->
+                    <div class="md:order-3 order-3">
+                        <div class="neon-border clip-corner bg-gradient-to-br from-purple-900/30 to-pink-900/30 p-8 backdrop-blur-sm hover-lift relative overflow-hidden">
+                            <div class="diagonal-line" style="left: 10%; transform: skewX(-20deg);"></div>
+                            <div class="diagonal-line" style="right: 10%; transform: skewX(-20deg);"></div>
+                            <div class="text-center relative z-10">
+                                <div class="rank-badge mb-4">#3</div>
+                                <div class="text-2xl font-bold text-pink-300 mb-2" style="font-family: 'Oxanium', sans-serif;">StackzHeavy</div>
+                                <div class="space-y-2 text-gray-400">
+                                    <div class="mono text-xl font-semibold text-purple-400">$29,750</div>
+                                    <div class="text-sm">Wagered</div>
+                                    <div class="mono text-lg text-red-400">-$1,240</div>
+                                    <div class="text-sm">Loss</div>
+                                </div>
+                                <div class="mt-4 pt-4 border-t border-purple-500/30">
+                                    <div class="text-2xl font-bold text-pink-400 mono">$500</div>
+                                    <div class="text-xs text-gray-500 uppercase">Prize</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Full Leaderboard Table -->
+        <section class="py-16 px-4 reveal">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-4xl font-bold text-center mb-8 neon-text" style="font-family: 'Oxanium', sans-serif;">
+                    FULL RANKINGS
+                </h2>
+
+                <!-- Search Box -->
+                <div class="mb-6 max-w-md mx-auto">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Search players..."
+                        class="w-full px-4 py-3 bg-purple-900/20 border border-purple-500/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-400 clip-corner-sm"
+                        style="font-family: 'Oxanium', sans-serif;"
+                    >
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <div class="neon-border clip-corner bg-gradient-to-br from-purple-900/20 to-pink-900/20 backdrop-blur-sm">
+                        <table class="w-full" id="leaderboardTable">
+                            <thead>
+                                <tr class="table-header" style="font-family: 'Oxanium', sans-serif;">
+                                    <th class="px-6 py-4 text-left cursor-pointer hover:text-purple-400 transition" data-sort="rank">
+                                        RANK <span class="sort-indicator">↕</span>
+                                    </th>
+                                    <th class="px-6 py-4 text-left cursor-pointer hover:text-purple-400 transition" data-sort="player">
+                                        PLAYER <span class="sort-indicator">↕</span>
+                                    </th>
+                                    <th class="px-6 py-4 text-right cursor-pointer hover:text-purple-400 transition" data-sort="wagered">
+                                        WAGERED <span class="sort-indicator">↕</span>
+                                    </th>
+                                    <th class="px-6 py-4 text-right cursor-pointer hover:text-purple-400 transition" data-sort="profit">
+                                        PROFIT/LOSS <span class="sort-indicator">↕</span>
+                                    </th>
+                                    <th class="px-6 py-4 text-right cursor-pointer hover:text-purple-400 transition" data-sort="prize">
+                                        PRIZE <span class="sort-indicator">↕</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <!-- JavaScript will populate this -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Prize Distribution -->
+        <section id="prizes" class="py-16 px-4 reveal">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold text-center mb-12 neon-text" style="font-family: 'Oxanium', sans-serif;">
+                    💰 PRIZE BREAKDOWN 💰
+                </h2>
+
+                <div class="space-y-4">
+                    <div class="neon-border clip-corner bg-gradient-to-r from-purple-900/30 to-pink-900/30 p-6 backdrop-blur-sm hover-lift flex justify-between items-center">
+                        <div>
+                            <span class="text-2xl font-bold neon-text" style="font-family: 'Oxanium', sans-serif;">🥇 1ST PLACE</span>
+                            <span class="ml-4 text-gray-400">Top wagerer</span>
+                        </div>
+                        <div class="text-3xl font-bold text-yellow-400 mono">$1,500</div>
+                    </div>
+
+                    <div class="neon-border clip-corner bg-gradient-to-r from-purple-900/30 to-pink-900/30 p-6 backdrop-blur-sm hover-lift flex justify-between items-center">
+                        <div>
+                            <span class="text-2xl font-bold text-purple-300" style="font-family: 'Oxanium', sans-serif;">🥈 2ND PLACE</span>
+                            <span class="ml-4 text-gray-400">Runner up</span>
+                        </div>
+                        <div class="text-3xl font-bold text-purple-400 mono">$750</div>
+                    </div>
+
+                    <div class="neon-border clip-corner bg-gradient-to-r from-purple-900/30 to-pink-900/30 p-6 backdrop-blur-sm hover-lift flex justify-between items-center">
+                        <div>
+                            <span class="text-2xl font-bold text-pink-300" style="font-family: 'Oxanium', sans-serif;">🥉 3RD PLACE</span>
+                            <span class="ml-4 text-gray-400">Third position</span>
+                        </div>
+                        <div class="text-3xl font-bold text-pink-400 mono">$500</div>
+                    </div>
+
+                    <div class="neon-border clip-corner bg-gradient-to-r from-purple-900/30 to-pink-900/30 p-6 backdrop-blur-sm hover-lift">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xl font-bold text-gray-300" style="font-family: 'Oxanium', sans-serif;">🎯 4TH - 10TH PLACE</span>
+                            <span class="text-gray-400">Combined pool</span>
+                        </div>
+                        <div class="text-right text-2xl font-bold text-gray-300 mono">$2,250</div>
+                        <div class="text-right text-sm text-gray-500 mt-1">
+                            $400 • $300 • $250 • $200 • $150 • $100 • $50
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section id="join" class="py-16 px-4 reveal">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="neon-border clip-corner bg-gradient-to-br from-purple-900/40 to-pink-900/40 p-12 backdrop-blur-sm neon-glow">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6 neon-text" style="font-family: 'Oxanium', sans-serif;">
+                        READY TO COMPETE?
+                    </h2>
+                    <p class="text-xl text-gray-300 mb-8">
+                        Use code <span class="text-purple-400 font-bold mono">PROPHITZ</span> on Razed and climb the ranks
+                    </p>
+                    <button class="btn-neon px-12 py-4 rounded-lg text-lg">
+                        JOIN THE ARENA
+                    </button>
+                    <p class="text-sm text-gray-500 mt-6">
+                        Competition ends soon. Don't miss your shot at the prize pool.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-8 px-4 border-t border-purple-500/30 mt-16">
+            <div class="max-w-7xl mx-auto text-center text-gray-500">
+                <p>© 2026 Razed</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Player Data
+        const players = [
+            { rank: 1, player: 'DrkKnight', wagered: 52100, profit: 8320, profitSign: '+', prize: 1500 },
+            { rank: 2, player: 'Vex', wagered: 38420, profit: 5180, profitSign: '+', prize: 750 },
+            { rank: 3, player: 'StackzHeavy', wagered: 29750, profit: 1240, profitSign: '-', prize: 500 },
+            { rank: 4, player: 'LuckyCharms', wagered: 24300, profit: 3920, profitSign: '+', prize: 400 },
+            { rank: 5, player: 'RedStar', wagered: 21870, profit: 1560, profitSign: '+', prize: 300 },
+            { rank: 6, player: 'ZephyrBlade', wagered: 18440, profit: 2100, profitSign: '-', prize: 250 },
+            { rank: 7, player: 'NightOwl99', wagered: 15290, profit: 980, profitSign: '+', prize: 200 },
+            { rank: 8, player: 'CryptoKing', wagered: 12650, profit: 4210, profitSign: '+', prize: 150 },
+            { rank: 9, player: 'PhantomAce', wagered: 10180, profit: 3440, profitSign: '-', prize: 100 },
+            { rank: 10, player: 'MintCondition', wagered: 8920, profit: 720, profitSign: '+', prize: 50 }
+        ];
+
+        // Format currency
+        function formatCurrency(num) {
+            return '$' + num.toLocaleString();
+        }
+
+        // Render Table
+        function renderTable(data = players) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = data.map(p => `
+                <tr class="table-row">
+                    <td class="px-6 py-4">
+                        <span class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 font-bold text-lg clip-corner-sm">
+                            ${p.rank <= 3 ? ['🥇', '🥈', '🥉'][p.rank - 1] : p.rank}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 font-semibold text-purple-300" style="font-family: 'Oxanium', sans-serif;">${p.player}</td>
+                    <td class="px-6 py-4 text-right mono text-gray-300">${formatCurrency(p.wagered)}</td>
+                    <td class="px-6 py-4 text-right mono ${p.profitSign === '+' ? 'text-green-400' : 'text-red-400'}">
+                        ${p.profitSign}${formatCurrency(p.profit)}
+                    </td>
+                    <td class="px-6 py-4 text-right mono text-pink-400 font-bold">${formatCurrency(p.prize)}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Search Functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const filtered = players.filter(p => p.player.toLowerCase().includes(query));
+            renderTable(filtered);
+        });
+
+        // Sorting Functionality
+        let currentSort = { column: 'rank', ascending: true };
+
+        document.querySelectorAll('[data-sort]').forEach(th => {
+            th.addEventListener('click', () => {
+                const column = th.dataset.sort;
+                const ascending = currentSort.column === column ? !currentSort.ascending : true;
+                currentSort = { column, ascending };
+
+                const sorted = [...players].sort((a, b) => {
+                    let aVal = a[column];
+                    let bVal = b[column];
+
+                    if (column === 'player') {
+                        aVal = aVal.toLowerCase();
+                        bVal = bVal.toLowerCase();
+                    }
+
+                    if (column === 'profit') {
+                        aVal = a.profitSign === '-' ? -a.profit : a.profit;
+                        bVal = b.profitSign === '-' ? -b.profit : b.profit;
+                    }
+
+                    if (aVal < bVal) return ascending ? -1 : 1;
+                    if (aVal > bVal) return ascending ? 1 : -1;
+                    return 0;
+                });
+
+                renderTable(sorted);
+
+                // Update indicators
+                document.querySelectorAll('.sort-indicator').forEach(el => el.textContent = '↕');
+                th.querySelector('.sort-indicator').textContent = ascending ? '↑' : '↓';
+            });
+        });
+
+        // Counter Animation
+        function animateCounter(element) {
+            const target = parseInt(element.dataset.target);
+            const duration = 2000;
+            const start = 0;
+            const startTime = performance.now();
+            const hasPrefix = element.dataset.prefix === '$';
+            const originalText = element.textContent;
+            const originalHasPrefix = originalText.includes('$');
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const current = Math.floor(progress * target);
+                
+                if (originalHasPrefix || hasPrefix) {
+                    element.textContent = '$' + current.toLocaleString();
+                } else {
+                    element.textContent = current.toLocaleString();
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        // Countdown Timer
+        function updateCountdown() {
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + 7); // 7 days from now
+
+            function tick() {
+                const now = new Date();
+                const diff = endDate - now;
+
+                if (diff <= 0) {
+                    document.getElementById('countdown').textContent = '00:00:00:00';
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('countdown').textContent = 
+                    `${days.toString().padStart(2, '0')}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            tick();
+            setInterval(tick, 1000);
+        }
+
+        // Scroll Reveal Animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    
+                    // Animate counters when they come into view
+                    if (entry.target.classList.contains('counter') && !entry.target.classList.contains('animated')) {
+                        entry.target.classList.add('animated');
+                        animateCounter(entry.target);
+                    }
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // Observe all reveal elements
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Observe counters
+        document.querySelectorAll('.counter').forEach(el => observer.observe(el));
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            renderTable();
+            updateCountdown();
+        });
+    </script>
+</body>
+</html>

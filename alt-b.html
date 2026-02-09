@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROPHITZ × RAZED | Affiliate Leaderboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0A0A0A;
+            color: #F5F0E8;
+            overflow-x: hidden;
+        }
+        
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .gold-gradient {
+            background: linear-gradient(135deg, #D4AF37 0%, #F4E5B0 50%, #D4AF37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gold-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, #D4AF37 50%, transparent 100%);
+        }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .hero-section, .nav-bar {
+            opacity: 1;
+            transform: none;
+        }
+        
+        .hover-gold {
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .hover-gold:hover {
+            color: #D4AF37;
+        }
+        
+        .subtle-border {
+            border: 1px solid rgba(212, 175, 55, 0.15);
+        }
+        
+        .table-row {
+            transition: background-color 0.2s ease;
+        }
+        
+        .table-row:hover {
+            background-color: rgba(212, 175, 55, 0.03);
+        }
+        
+        .cta-button {
+            background: linear-gradient(135deg, #D4AF37 0%, #C5A028 100%);
+            color: #0A0A0A;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.25);
+        }
+        
+        .ticker-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 2rem;
+            white-space: nowrap;
+        }
+        
+        @keyframes ticker-scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+        
+        .ticker-content {
+            display: flex;
+            animation: ticker-scroll 30s linear infinite;
+        }
+        
+        .sort-icon {
+            display: inline-block;
+            width: 16px;
+            text-align: center;
+            color: #D4AF37;
+            opacity: 0.3;
+            transition: opacity 0.2s;
+        }
+        
+        .sort-active {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav-bar fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-sm border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+            <div class="font-display text-xl tracking-wider">
+                <span class="text-white">PROPHITZ</span>
+                <span class="text-gray-600 mx-3">×</span>
+                <span class="gold-gradient font-semibold">RAZED</span>
+            </div>
+            <div class="flex items-center gap-8 text-sm">
+                <a href="#leaderboard" class="hover-gold text-gray-400">Leaderboard</a>
+                <a href="#prizes" class="hover-gold text-gray-400">Prizes</a>
+                <a href="#join" class="hover-gold text-gray-400">Join</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Ticker -->
+    <div class="mt-20 border-y border-gray-800 bg-black/30 py-3 overflow-hidden">
+        <div class="ticker-content">
+            <div class="ticker-item">
+                <span class="text-gray-500 text-sm">SEASON ENDS</span>
+                <span class="font-mono text-white text-sm" id="countdown">00:00:00:00</span>
+                <span class="text-gray-800">•</span>
+                <span class="text-gray-500 text-sm">TOTAL WAGERED</span>
+                <span class="font-mono text-white text-sm">$247,892</span>
+                <span class="text-gray-800">•</span>
+                <span class="text-gray-500 text-sm">PRIZE POOL</span>
+                <span class="font-mono gold-gradient text-sm font-semibold">$5,000</span>
+                <span class="text-gray-800">•</span>
+            </div>
+            <div class="ticker-item">
+                <span class="text-gray-500 text-sm">SEASON ENDS</span>
+                <span class="font-mono text-white text-sm" id="countdown2">00:00:00:00</span>
+                <span class="text-gray-800">•</span>
+                <span class="text-gray-500 text-sm">TOTAL WAGERED</span>
+                <span class="font-mono text-white text-sm">$247,892</span>
+                <span class="text-gray-800">•</span>
+                <span class="text-gray-500 text-sm">PRIZE POOL</span>
+                <span class="font-mono gold-gradient text-sm font-semibold">$5,000</span>
+                <span class="text-gray-800">•</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Stats -->
+    <section class="hero-section max-w-7xl mx-auto px-6 py-24">
+        <h1 class="font-display text-6xl md:text-8xl text-center mb-4 tracking-tight">
+            AFFILIATE LEADERBOARD
+        </h1>
+        <div class="gold-line w-32 mx-auto mb-16"></div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
+            <div class="text-center">
+                <div class="text-gray-500 text-sm uppercase tracking-wider mb-3">Active Players</div>
+                <div class="font-mono text-5xl md:text-6xl gold-gradient font-semibold counter" data-target="342">0</div>
+            </div>
+            <div class="text-center">
+                <div class="text-gray-500 text-sm uppercase tracking-wider mb-3">Total Wagered</div>
+                <div class="font-mono text-5xl md:text-6xl text-white counter" data-target="247892" data-prefix="$">$0</div>
+            </div>
+            <div class="text-center">
+                <div class="text-gray-500 text-sm uppercase tracking-wider mb-3">Prize Pool</div>
+                <div class="font-mono text-5xl md:text-6xl gold-gradient font-semibold counter" data-target="5000" data-prefix="$">$0</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Podium -->
+    <section id="leaderboard" class="max-w-7xl mx-auto px-6 py-24 reveal">
+        <div class="text-center mb-20">
+            <h2 class="font-display text-5xl md:text-6xl mb-4">Top Three</h2>
+            <div class="gold-line w-24 mx-auto"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto mb-32">
+            <!-- 2nd Place -->
+            <div class="md:order-1 text-center pt-12">
+                <div class="text-8xl font-display gold-gradient mb-4">2</div>
+                <div class="text-2xl font-semibold mb-2">Vex</div>
+                <div class="gold-line w-16 mx-auto mb-4"></div>
+                <div class="space-y-2 text-gray-400">
+                    <div class="font-mono text-sm">$38,420 <span class="text-gray-600">wagered</span></div>
+                    <div class="font-mono text-sm text-green-400">+$5,180 <span class="text-gray-600">profit</span></div>
+                    <div class="font-mono text-lg gold-gradient font-semibold mt-4">$750</div>
+                </div>
+            </div>
+
+            <!-- 1st Place -->
+            <div class="md:order-2 text-center">
+                <div class="text-9xl font-display gold-gradient mb-4">1</div>
+                <div class="text-3xl font-semibold mb-2">DrkKnight</div>
+                <div class="gold-line w-20 mx-auto mb-4"></div>
+                <div class="space-y-2 text-gray-400">
+                    <div class="font-mono text-base">$52,100 <span class="text-gray-600">wagered</span></div>
+                    <div class="font-mono text-base text-green-400">+$8,320 <span class="text-gray-600">profit</span></div>
+                    <div class="font-mono text-2xl gold-gradient font-semibold mt-4">$1,500</div>
+                </div>
+            </div>
+
+            <!-- 3rd Place -->
+            <div class="md:order-3 text-center pt-16">
+                <div class="text-7xl font-display gold-gradient mb-4">3</div>
+                <div class="text-xl font-semibold mb-2">StackzHeavy</div>
+                <div class="gold-line w-12 mx-auto mb-4"></div>
+                <div class="space-y-2 text-gray-400">
+                    <div class="font-mono text-sm">$29,750 <span class="text-gray-600">wagered</span></div>
+                    <div class="font-mono text-sm text-red-400">-$1,240 <span class="text-gray-600">loss</span></div>
+                    <div class="font-mono text-lg gold-gradient font-semibold mt-4">$500</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Full Leaderboard Table -->
+    <section class="max-w-7xl mx-auto px-6 py-24 reveal">
+        <div class="text-center mb-12">
+            <h2 class="font-display text-4xl md:text-5xl mb-4">Complete Rankings</h2>
+            <div class="gold-line w-20 mx-auto"></div>
+        </div>
+
+        <!-- Search -->
+        <div class="mb-8 max-w-md mx-auto">
+            <input 
+                type="text" 
+                id="searchInput" 
+                placeholder="Search players..."
+                class="w-full px-6 py-4 bg-black/40 border border-gray-800 text-white placeholder-gray-600 focus:outline-none focus:border-gold-500 transition-colors"
+            >
+        </div>
+
+        <!-- Table -->
+        <div class="overflow-x-auto subtle-border bg-black/20">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-gray-800">
+                        <th class="px-6 py-5 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover-gold" onclick="sortTable('rank')">
+                            Rank <span class="sort-icon" id="sort-rank">↕</span>
+                        </th>
+                        <th class="px-6 py-5 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover-gold" onclick="sortTable('player')">
+                            Player <span class="sort-icon" id="sort-player">↕</span>
+                        </th>
+                        <th class="px-6 py-5 text-right text-sm font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover-gold" onclick="sortTable('wagered')">
+                            Wagered <span class="sort-icon" id="sort-wagered">↕</span>
+                        </th>
+                        <th class="px-6 py-5 text-right text-sm font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover-gold" onclick="sortTable('profit')">
+                            Profit/Loss <span class="sort-icon" id="sort-profit">↕</span>
+                        </th>
+                        <th class="px-6 py-5 text-right text-sm font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover-gold" onclick="sortTable('prize')">
+                            Prize <span class="sort-icon" id="sort-prize">↕</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardBody">
+                    <!-- Rows populated by JS -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Prize Distribution -->
+    <section id="prizes" class="max-w-7xl mx-auto px-6 py-24 reveal">
+        <div class="text-center mb-16">
+            <h2 class="font-display text-4xl md:text-5xl mb-4">Prize Distribution</h2>
+            <div class="gold-line w-20 mx-auto"></div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-6 max-w-5xl mx-auto">
+            <div class="text-center p-6 subtle-border bg-black/10">
+                <div class="text-4xl gold-gradient font-display mb-2">1st</div>
+                <div class="font-mono text-xl text-white">$1,500</div>
+            </div>
+            <div class="text-center p-6 subtle-border bg-black/10">
+                <div class="text-4xl gold-gradient font-display mb-2">2nd</div>
+                <div class="font-mono text-xl text-white">$750</div>
+            </div>
+            <div class="text-center p-6 subtle-border bg-black/10">
+                <div class="text-4xl gold-gradient font-display mb-2">3rd</div>
+                <div class="font-mono text-xl text-white">$500</div>
+            </div>
+            <div class="text-center p-6 subtle-border bg-black/10">
+                <div class="text-4xl gold-gradient font-display mb-2">4th</div>
+                <div class="font-mono text-xl text-white">$400</div>
+            </div>
+            <div class="text-center p-6 subtle-border bg-black/10">
+                <div class="text-4xl gold-gradient font-display mb-2">5th</div>
+                <div class="font-mono text-xl text-white">$300</div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-8 text-gray-500 text-sm">
+            Positions 6-10 receive $250, $200, $150, $100, and $50 respectively
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="join" class="max-w-4xl mx-auto px-6 py-32 text-center reveal">
+        <h2 class="font-display text-5xl md:text-6xl mb-6">Claim Your Spot</h2>
+        <p class="text-gray-400 text-lg mb-12 max-w-2xl mx-auto leading-relaxed">
+            Join the most exclusive affiliate competition. Use code PROPHITZ on Razed and compete for your share of the prize pool.
+        </p>
+        <button class="cta-button px-12 py-5 text-lg font-semibold tracking-wide">
+            ENTER THE ARENA
+        </button>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 mt-32">
+        <div class="max-w-7xl mx-auto px-6 py-8 text-center text-gray-600 text-sm">
+            © 2026 Razed
+        </div>
+    </footer>
+
+    <script>
+        // Player data
+        const players = [
+            { rank: 1, player: 'DrkKnight', wagered: 52100, profit: 8320, profitSign: '+', prize: 1500 },
+            { rank: 2, player: 'Vex', wagered: 38420, profit: 5180, profitSign: '+', prize: 750 },
+            { rank: 3, player: 'StackzHeavy', wagered: 29750, profit: -1240, profitSign: '-', prize: 500 },
+            { rank: 4, player: 'LuckyCharms', wagered: 24300, profit: 3920, profitSign: '+', prize: 400 },
+            { rank: 5, player: 'RedStar', wagered: 21870, profit: 1560, profitSign: '+', prize: 300 },
+            { rank: 6, player: 'ZephyrBlade', wagered: 18440, profit: -2100, profitSign: '-', prize: 250 },
+            { rank: 7, player: 'NightOwl99', wagered: 15290, profit: 980, profitSign: '+', prize: 200 },
+            { rank: 8, player: 'CryptoKing', wagered: 12650, profit: 4210, profitSign: '+', prize: 150 },
+            { rank: 9, player: 'PhantomAce', wagered: 10180, profit: -3440, profitSign: '-', prize: 100 },
+            { rank: 10, player: 'MintCondition', wagered: 8920, profit: 720, profitSign: '+', prize: 50 }
+        ];
+
+        let currentSort = { column: 'rank', direction: 'asc' };
+
+        // Format number with commas
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        // Render table
+        function renderTable(data) {
+            const tbody = document.getElementById('leaderboardBody');
+            tbody.innerHTML = data.map(p => `
+                <tr class="table-row border-b border-gray-800/50">
+                    <td class="px-6 py-5">
+                        <span class="font-display text-2xl gold-gradient font-semibold">${p.rank}</span>
+                    </td>
+                    <td class="px-6 py-5 font-semibold text-lg">${p.player}</td>
+                    <td class="px-6 py-5 text-right font-mono text-gray-300">$${formatNumber(p.wagered)}</td>
+                    <td class="px-6 py-5 text-right font-mono ${p.profitSign === '+' ? 'text-green-400' : 'text-red-400'}">
+                        ${p.profitSign}$${formatNumber(Math.abs(p.profit))}
+                    </td>
+                    <td class="px-6 py-5 text-right font-mono text-white font-semibold">$${formatNumber(p.prize)}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Sort table
+        function sortTable(column) {
+            // Reset all sort icons
+            document.querySelectorAll('.sort-icon').forEach(icon => {
+                icon.classList.remove('sort-active');
+                icon.textContent = '↕';
+            });
+
+            if (currentSort.column === column) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = column;
+                currentSort.direction = 'asc';
+            }
+
+            const sorted = [...players].sort((a, b) => {
+                let aVal = a[column];
+                let bVal = b[column];
+                
+                if (column === 'player') {
+                    aVal = aVal.toLowerCase();
+                    bVal = bVal.toLowerCase();
+                }
+                
+                if (currentSort.direction === 'asc') {
+                    return aVal > bVal ? 1 : -1;
+                } else {
+                    return aVal < bVal ? 1 : -1;
+                }
+            });
+
+            const icon = document.getElementById(`sort-${column}`);
+            icon.classList.add('sort-active');
+            icon.textContent = currentSort.direction === 'asc' ? '↑' : '↓';
+
+            renderTable(sorted);
+        }
+
+        // Search
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const filtered = players.filter(p => 
+                p.player.toLowerCase().includes(query)
+            );
+            renderTable(filtered);
+        });
+
+        // Counter animation
+        function animateCounter(element) {
+            const target = parseInt(element.dataset.target);
+            const prefix = element.dataset.prefix || '';
+            const duration = 2000;
+            const startTime = performance.now();
+            const originalText = element.textContent;
+            const hasPrefix = originalText.includes('$');
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const current = Math.floor(progress * target);
+                
+                if (hasPrefix) {
+                    element.textContent = `${prefix}${formatNumber(current)}`;
+                } else {
+                    element.textContent = formatNumber(current);
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        // Countdown timer
+        function updateCountdown() {
+            const endDate = new Date('2026-03-01T00:00:00');
+            const now = new Date();
+            const diff = endDate - now;
+
+            if (diff > 0) {
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                const formatted = `${String(days).padStart(2, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                document.getElementById('countdown').textContent = formatted;
+                document.getElementById('countdown2').textContent = formatted;
+            }
+        }
+
+        // Intersection Observer for reveals
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTable(players);
+            
+            document.querySelectorAll('.counter').forEach(el => {
+                animateCounter(el);
+            });
+
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        });
+    </script>
+</body>
+</html>
